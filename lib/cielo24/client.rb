@@ -31,7 +31,7 @@ module Cielo24
       self.connection = connect
 
       # Go ahead and set up the single use token for this session
-      @token = login(self.class.options[:username], self.class.options[:password])
+      @token = log_in(self.class.options[:username], self.class.options[:password])
     end
 
     # Internal: Returns an HTTPClient connection object.
