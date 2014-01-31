@@ -8,7 +8,7 @@ module Cielo24
     #
     # Returns a job id for the newly created job.
     def create_job(job_name, language = "en")
-      data = get("/api/job/new", {job_name: job_name, language: language})
+      data = get_json("/api/job/new", {job_name: job_name, language: language})
 
       return data["JobId"]
     end
@@ -20,7 +20,7 @@ module Cielo24
     #
     # Returns the task id for the media.
     def add_media(job_id, media_url)
-      data = get("/api/job/add_media", {job_id: job_id, media_url: media_url})
+      data = get_json("/api/job/add_media", {job_id: job_id, media_url: media_url})
 
       data["TaskId"]
     end
@@ -33,10 +33,40 @@ module Cielo24
     # 
     # Returns the task id for the transcription.
     def perform_transcription(job_id, fidelity = "PROFESSIONAL", priority = "STANDARD")
-      data = get("/api/job/perform_transcription", 
+      data = get_json("/api/job/perform_transcription", 
           {job_id: job_id, transcription_fidelity: fidelity, priority: priority})
 
       data["TaskId"]
+    end
+
+    # Public: Requests info about a particular job.
+    #
+    # job_id - The job to get info about.
+    #
+    # Returns
+    def job_info(job_id)
+      get_json("/api/job/info", {job_id: job_id})
+    end
+
+    # Public: Returns whether or not a task has completed.
+    #
+    # task_id - The task to check status for.
+    #
+    # Returns true if the task is complete, false otherwise.
+    def task_complete?(task_id)
+      get_json("/api/job/task_status", {task_id: task_id})["TaskStatus"] == "COMPLETED"
+    end
+
+    # Public: Gets the caption results from a job.
+    #
+    # job_id - The id of the job we're pulling captions for.
+    # caption_format - THe format for the captions. SRT, SBV, DFXP, or QT. Defaults to SRT.
+    # options - Additional optional parameters for requesting captions. See the Cielo24 documentation
+    #           for the list of optional parameters.
+    #
+    # Returns the caption data as text.
+    def get_caption(job_id, caption_format = "SRT", options = {})
+      get("/api/job/get_caption", options.merge(caption_format: caption_format, job_id: job_id))
     end
   end
 end

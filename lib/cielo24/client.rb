@@ -10,6 +10,7 @@ module Cielo24
 
     DEFAULT_URI = "https://api.cielo24.com"
     VERSION = 1
+    VERIFY_MODE = nil
 
     # Public: Configures the connection.
     #
@@ -18,7 +19,7 @@ module Cielo24
     #     :password - The password to use for authentication.
     #     :uri - The uri to use for requests. Defaults to the Cielo24 API URI.
     def self.configure(options = {})
-      @options = {uri: DEFAULT_URI, version: VERSION}.merge(options)
+      @options = {uri: DEFAULT_URI, version: VERSION, verify_mode: VERIFY_MODE}.merge(options)
     end
 
     # Internal: Our configuration settings for Cielo24.
@@ -37,6 +38,10 @@ module Cielo24
     def connect
       connection = HTTPClient.new
       connection.cookie_manager = nil
+
+      unless self.class.options[:verify_mode] == nil
+        connection.ssl_config.verify_mode = self.class.options[:verify_mode]
+      end
 
       return connection
     end
@@ -61,10 +66,18 @@ module Cielo24
 
       response = connection.get(uri, params)
       if response.status_code == 200
-        return JSON.parse(response.body)
+        return response.body
       else
+        # Cielo24 always returns error messages as JSON
         raise(JSON.parse(response.body)["ErrorComment"])
       end
+    end
+
+    # Internal: Makes a request to Cielo24 and returns JSON data
+    def get_json(path, params)
+      body = get(path, params)
+
+      JSON.parse(body)
     end
   end
 end
