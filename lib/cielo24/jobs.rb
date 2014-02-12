@@ -54,7 +54,7 @@ module Cielo24
     #
     # Returns true if the task is complete, false otherwise.
     def task_complete?(task_id)
-      get_json("/api/job/task_status", {task_id: task_id})["TaskStatus"] == "COMPLETED"
+      get_json("/api/job/task_status", {task_id: task_id})["TaskStatus"] == "COMPLETE"
     end
 
     # Public: Gets the caption results from a job.
