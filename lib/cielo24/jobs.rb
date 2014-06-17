@@ -43,9 +43,18 @@ module Cielo24
     #
     # job_id - The job to get info about.
     #
-    # Returns
+    # Returns the job info as JSON
     def job_info(job_id)
       get_json("/api/job/info", {job_id: job_id})
+    end
+
+    # Public: Requests the status info for a particular task.
+    #
+    # task_id - The task to get info about.
+    #
+    # Returns the task info as JSON
+    def task_status(task_id)
+      get_json("/api/job/task_status", {task_id: task_id})
     end
 
     # Public: Returns whether or not a task has completed.
@@ -67,6 +76,17 @@ module Cielo24
     # Returns the caption data as text.
     def get_caption(job_id, caption_format = "SRT", options = {})
       get("/api/job/get_caption", options.merge(caption_format: caption_format, job_id: job_id))
+    end
+
+    # Public: Gets the transcript results from a job.
+    #
+    # job_id - The id of the job we're retrieving a transcription for.
+    # options - Optional parameters for requesting transcripts. See the Cielo24 documentation
+    #           for the full list of parameters.
+    #
+    # Returns the transcript data as text.
+    def get_transcript(job_id, options = {})
+      get("/api/job/get_transcript", options.merge(job_id: job_id))
     end
   end
 end
