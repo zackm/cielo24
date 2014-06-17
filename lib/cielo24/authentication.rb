@@ -3,8 +3,12 @@ module Cielo24
   module Authentication
     
     # Public: Get a api token for this session.
-    def log_in(username, password)
-      data = get_json("/api/account/login", {username: username, password: password})
+    #
+    # options - a Hash with either of the following sets of keys:
+    #     username, password
+    #     username, securekey
+    def log_in(options)
+      data = get_json("/api/account/login", options)
       data["ApiToken"]
     end
   end
