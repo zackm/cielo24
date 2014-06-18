@@ -17,6 +17,7 @@ module Cielo24
     # options - the configuration options for use with Cielo24.
     #     :username - The username to use for authentication.
     #     :password - The password to use for authentication.
+    #     :api_key - The API key to use for authentication.
     #     :uri - The uri to use for requests. Defaults to the Cielo24 API URI.
     def self.configure(options = {})
       @options = {uri: DEFAULT_URI, version: VERSION, verify_mode: VERIFY_MODE}.merge(options)
