@@ -30,11 +30,13 @@ module Cielo24
     # job_id - The id of a job to attach media to.
     # fidelity - Should be one of MECHANICAL, PREMIUM, or PROFESSIONAL. Default: PROFESSIONAL
     # priority - Should be one of ECONOMY, STANDARD, or PRIORITY. Default: STANDARD
+    # options - Additional optional parameters for perform the transcription. See the Cielo24 documentation
+    #           for the full list.
     # 
     # Returns the task id for the transcription.
-    def perform_transcription(job_id, fidelity = "PROFESSIONAL", priority = "STANDARD")
-      data = get_json("/api/job/perform_transcription", 
-          {job_id: job_id, transcription_fidelity: fidelity, priority: priority})
+    def perform_transcription(job_id, fidelity = "PROFESSIONAL", priority = "STANDARD", options = {})
+      options = options.merge(job_id: job_id, transcription_fidelity: fidelity, priority: priority)
+      data = get_json("/api/job/perform_transcription", options)
 
       data["TaskId"]
     end
