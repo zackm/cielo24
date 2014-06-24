@@ -76,7 +76,7 @@ module Cielo24
         return response.body
       else
         # Cielo24 always returns error messages as JSON
-        raise(JSON.parse(response.body)['ErrorComment'])
+        raise(JSON.parse(response.body)["ErrorComment"])
       end
     end
 
