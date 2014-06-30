@@ -17,6 +17,7 @@ module Cielo24
     # options - the configuration options for use with Cielo24.
     #     :username - The username to use for authentication.
     #     :password - The password to use for authentication.
+    #     :api_key - The API key to use for authentication.
     #     :uri - The uri to use for requests. Defaults to the Cielo24 API URI.
     def self.configure(options = {})
       @options = {uri: DEFAULT_URI, version: VERSION, verify_mode: VERIFY_MODE}.merge(options)
@@ -30,8 +31,14 @@ module Cielo24
     def initialize
       self.connection = connect
 
+      login_options = {username: self.class.options[:username]}
+      if self.class.options[:api_key]
+        login_options['securekey'] = self.class.options[:api_key]
+      else
+        login_options['password'] = self.class.options[:password]
+      end
       # Go ahead and set up the single use token for this session
-      @token = log_in(self.class.options[:username], self.class.options[:password])
+      @token = log_in(login_options)
     end
 
     # Internal: Returns an HTTPClient connection object.

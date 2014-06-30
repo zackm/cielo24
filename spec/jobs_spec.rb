@@ -62,12 +62,35 @@ describe "Cielo24::Jobs" do
     end
   end
 
-  describe "get_caption" do
+  describe "#job_info" do
+    it "returns job info" do
+      stub_get_json("/api/job/info", {"JobId" => "JOB123", "JobName" => "A Test Job"})
+      expect(client.job_info(job_id)).to_not be_nil
+    end
+  end
+
+  describe "#task_status" do
+    it "returns the task status" do
+      stub_get_json("/api/job/task_status", {"TaskId" => "TASK123", "TaskType" => "JOB_PERFORM_TRANSCRIPT"})
+      expect(client.task_status("TASK123")).to_not be_nil
+    end
+  end
+
+  describe "#get_caption" do
     it "returns the captions" do
       pending("SANDBOX DOESN'T ALWAYS RETURN CAPTIONS CORRECTLY") if test_sandbox?
       
       stub_get("/api/job/get_caption", "SOME CAPTION DATA")
       expect(client.get_caption(transcribed_job_id)).to_not be_nil
+    end
+  end
+
+  describe "#get_transcript" do
+    it "returns the transcripts" do
+      pending("SANDBOX DOESN'T ALWAYS RETURN TRANSCRIPTS CORRECTLY") if test_sandbox?
+
+      stub_get("/api/job/get_transcript", "This is some transcript data.")
+      expect(client.get_transcript(transcribed_job_id)).to_not be_nil
     end
   end
 end
